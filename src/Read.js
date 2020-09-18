@@ -4,22 +4,24 @@ import ShelfChanger from './ShelfChanger'
 
 class Read extends React.Component {
 
-    state = {
-        read: []
-    }
+    // state = {
+    //     read: []
+    // }
 
-    componentWillReceiveProps(props) {
-        let read = props.books.filter((book) => {
-            return book.shelf === 'read';
-          })
-          this.setState(() => ({
-            read
-          }))
-    }
+    // componentWillReceiveProps(props) {
+    //     let read = props.books.filter((book) => {
+    //         return book.shelf === 'read';
+    //       })
+    //       this.setState(() => ({
+    //         read
+    //       }))
+    // }
 
 
     render() {
-        const books = this.state.read;
+        const books = this.props.books.filter(
+            (book) => book.shelf === 'read'
+        );
         return (
             <div className="bookshelf">
                 <h2 className="bookshelf-title">Read</h2>
@@ -30,9 +32,9 @@ class Read extends React.Component {
                                 <li key={book.id}>
                                     <div className="book">
                                         <div className="book-top">
-                                        <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: 'url(' + book.imageLinks.thumbnail +')' }}></div>
+                                        <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: book.imageLinks ? `url(${book.imageLinks.thumbnail})`: '' }}></div>
                                         <div className="book-shelf-changer">
-                                        <ShelfChanger onShelfChange={this.props.onShelfChange} id={book.id}/>
+                                        <ShelfChanger onShelfChange={this.props.onShelfChange} shelf={book.shelf} id={book.id}/>
                                         </div>
                                         </div>
                                         <div className="book-title">{book.title}</div>

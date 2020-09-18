@@ -3,21 +3,23 @@ import Authors from './Authors'
 import ShelfChanger from './ShelfChanger'
 
 class CurrentlyReading extends React.Component {
-    state = {
-        currentlyReading: []
-    }
+    // state = {
+    //     currentlyReading: []
+    // }
 
-    componentWillReceiveProps(props) {
-        let currentlyReading = props.books.filter((book) => {
-            return book.shelf === 'currentlyReading';
-          })
-          this.setState(() => ({
-            currentlyReading
-          }))
-    }
+    // componentWillReceiveProps(props) {
+    //     let currentlyReading = props.books.filter((book) => {
+    //         return book.shelf === 'currentlyReading';
+    //       })
+    //       this.setState(() => ({
+    //         currentlyReading
+    //       }))
+    // }
 
     render() {
-        const books = this.state.currentlyReading;
+        const books = this.props.books.filter(
+            (book) => book.shelf === 'currentlyReading'
+        );
         return (
             <div className="bookshelf">
                 <h2 className="bookshelf-title">Currently Reading</h2>
@@ -28,9 +30,9 @@ class CurrentlyReading extends React.Component {
                             <li key={book.id}>
                                 <div className="book">
                                     <div className="book-top">
-                                    <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: 'url(' + book.imageLinks.thumbnail +')' }}></div>
+                                    <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: book.imageLinks? `url(${book.imageLinks.thumbnail})`:'' }}></div>
                                     <div className="book-shelf-changer">
-                                        <ShelfChanger onShelfChange={this.props.onShelfChange} id={book.id}/>
+                                        <ShelfChanger onShelfChange={this.props.onShelfChange} shelf={book.shelf} id={book.id}/>
                                     </div>
                                     </div>
                                     <div className="book-title">{book.title}</div>
