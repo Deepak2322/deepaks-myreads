@@ -7,12 +7,6 @@ class CurrentlyReading extends React.Component {
         currentlyReading: []
     }
 
-
-    constructor(props) {
-        super(props);
-        console.log(this.props);
-    }
-
     componentWillReceiveProps(props) {
         let currentlyReading = props.books.filter((book) => {
             return book.shelf === 'currentlyReading';
@@ -36,7 +30,7 @@ class CurrentlyReading extends React.Component {
                                     <div className="book-top">
                                     <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: 'url(' + book.imageLinks.thumbnail +')' }}></div>
                                     <div className="book-shelf-changer">
-                                        <ShelfChanger/>
+                                        <ShelfChanger onShelfChange={this.props.onShelfChange} id={book.id}/>
                                     </div>
                                     </div>
                                     <div className="book-title">{book.title}</div>

@@ -5,9 +5,8 @@ import * as Books from './BooksAPI'
 import CurrentlyReading from './CurrentlyReading'
 import WantToRead from './WantToRead'
 import Read from './Read'
+import { Link, Route } from 'react-router-dom'
 import SearchBooks from './SearchBooks'
-import { Link } from 'react-router-dom'
-import { Route } from 'react-router-dom'
 class BooksApp extends React.Component {
 
   state = {
@@ -18,11 +17,13 @@ class BooksApp extends React.Component {
      * pages, as well as provide a good URL they can bookmark and share.
      */
     books: [],
+    allBooks: [],
+    query: '',
     shelf: ["Move to...", "Currently Reading", "Want to Read", "Read", "None"],
-    showSearchPage: false
   }
 
   componentDidMount() {
+    console.log("Got all books");
     Books.getAll()
     .then((books) => {
       this.setState(() => ({
@@ -31,21 +32,74 @@ class BooksApp extends React.Component {
     })
   }
 
+  changeShelf = (id, e) => {
+    let shelf = e.target.value;
+    const changedShelf = this.state.books.filter(book => id === book.id);
+    const searchedBooks = this.state.allBooks.filter(book => id === book.id);
+    if(this.isExistingBook(id)) {
+      changedShelf[0].shelf = shelf;
+      Books.update(changedShelf[0], e.target.value)
+      .then((book) => {
+        this.setState((currentState) => ({
+          books: currentState.books.concat([book])
+        }))
+      })
+    } else {
+      searchedBooks[0].shelf = shelf;
+      Books.update(searchedBooks[0], e.target.value)
+      .then((book) => {
+        this.setState((currentState) => ({
+          books: currentState.books.concat([book])
+        }))
+      })
+    }
+  }
+
+  isExistingBook = (id) => {
+    const bookIds = [];
+    this.state.books.forEach((book) => bookIds.push(book.id));
+    return bookIds.includes(id) ? true : false
+  }
+
+  handleSearch = (query) => {
+    this.setState(() => ({
+      query: query.trim()
+    }))
+    query !== '' && Books.search(this.state.query)
+    .then((books) => {
+      if(books === undefined || books.error) {
+        this.setState(() => ({
+          allBooks: []
+        }))
+      } else {
+        this.setState(() => ({
+          allBooks: books
+        }))
+      }
+    })
+  }
 
   render() {
+
     return (
       <div className="app">
           <div className="list-books">
             <div className="list-books-title">
               <h1>MyReads</h1>
             </div>
-            <Route path='/search' component={SearchBooks}/>
+            <Route path='/search' render={({history}) => (
+              <SearchBooks 
+              onSearch={this.handleSearch} 
+              booksList={this.state.allBooks} 
+              query={this.state.query} 
+              onShelfChange={this.changeShelf}/>
+            )}/>
             <div className="list-books-content">
                 <Route exact path='/' render={() => (
                   <div>
-                     <CurrentlyReading books={this.state.books} shelf={this.state.shelf}/>
-                      <WantToRead books={this.state.books} shelf={this.state.shelf}/>
-                      <Read books={this.state.books} shelf={this.state.shelf}/>
+                      <CurrentlyReading books={this.state.books} shelf={this.state.shelf} onShelfChange={this.changeShelf}/>
+                      <WantToRead books={this.state.books} shelf={this.state.shelf} onShelfChange={this.changeShelf}/>
+                      <Read books={this.state.books} shelf={this.state.shelf} onShelfChange={this.changeShelf}/>
                   </div>
                 )}/>
                

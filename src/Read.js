@@ -15,14 +15,14 @@ class Read extends React.Component {
           this.setState(() => ({
             read
           }))
-          console.log(this.props.shelf);
     }
+
 
     render() {
         const books = this.state.read;
         return (
             <div className="bookshelf">
-                <h2 className="bookshelf-title">Want to Read</h2>
+                <h2 className="bookshelf-title">Read</h2>
                 <div className="bookshelf-books">
                     <ol className="books-grid">
                         {books.map((book) => {
@@ -32,7 +32,7 @@ class Read extends React.Component {
                                         <div className="book-top">
                                         <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: 'url(' + book.imageLinks.thumbnail +')' }}></div>
                                         <div className="book-shelf-changer">
-                                            <ShelfChanger/>
+                                        <ShelfChanger onShelfChange={this.props.onShelfChange} id={book.id}/>
                                         </div>
                                         </div>
                                         <div className="book-title">{book.title}</div>
