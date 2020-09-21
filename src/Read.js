@@ -4,24 +4,11 @@ import ShelfChanger from './ShelfChanger'
 
 class Read extends React.Component {
 
-    // state = {
-    //     read: []
-    // }
-
-    // componentWillReceiveProps(props) {
-    //     let read = props.books.filter((book) => {
-    //         return book.shelf === 'read';
-    //       })
-    //       this.setState(() => ({
-    //         read
-    //       }))
-    // }
-
-
     render() {
         const books = this.props.books.filter(
             (book) => book.shelf === 'read'
         );
+        
         return (
             <div className="bookshelf">
                 <h2 className="bookshelf-title">Read</h2>

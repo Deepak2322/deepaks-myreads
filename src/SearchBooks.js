@@ -6,8 +6,18 @@ import App from './App.js'
 import * as Books from './BooksAPI'
 class SearchBooks extends React.Component {
     
-    render() {
+  checkShelf = (books) => {
+    let searchResults = [];
+    this.props.booksList.map(searchBook => {
+      let result = books.find(book => book.id === searchBook.id);
+      searchBook.shelf = result ? result.shelf : 'none'
+      searchResults.push(searchBook);
+    })
+    return searchResults;
+  }  
 
+    render() {
+        const searchResults = this.checkShelf(this.props.existingBooks);
         return (
             <div className="search-books">
             <div className="search-books-bar">
@@ -17,28 +27,19 @@ class SearchBooks extends React.Component {
                 </button>
               </Link>
               <div className="search-books-input-wrapper">
-                {/*
-                  NOTES: The search from BooksAPI is limited to a particular set of search terms.
-                  You can find these search terms here:
-                  https://github.com/udacity/reactnd-project-myreads-starter/blob/master/SEARCH_TERMS.md
-
-                  However, remember that the BooksAPI.search method DOES search by title or author. So, don't worry if
-                  you don't find a specific author or title. Every search is limited by search terms.
-                */}
                 <input type="text" onChange={(event) => {this.props.onSearch(event.target.value)}} placeholder="Search by title or author"/>
-
               </div>
             </div>
             <div className="search-books-results">
               <ol className="books-grid">
-              {this.props.booksList.map((book) => {
+              {searchResults && searchResults.map((book) => {
                   return (   
-                    <li key={book.id}>
+                    book && <li key={book.id}>
                         <div className="book">
                             <div className="book-top">
                             <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: book.imageLinks ? `url(${book.imageLinks.thumbnail})`: '' }}></div>
                             <div className="book-shelf-changer">
-                                <ShelfChanger onShelfChange={this.props.onShelfChange} shelf={book.shelf} id={book.id}/>
+                                <ShelfChanger onShelfChange={this.props.onShelfChange}  shelf={book.shelf} id={book.id}/>
                             </div>
                             </div>
                             <div className="book-title">{book.title}</div>

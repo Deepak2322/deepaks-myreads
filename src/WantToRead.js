@@ -3,18 +3,7 @@ import Authors from './Authors'
 import ShelfChanger from './ShelfChanger'
 
 class WantToRead extends React.Component {
-    // state = {
-    //     wantToRead: []
-    // }
-
-    // componentWillReceiveProps(props) {
-    //     let wantToRead = props.books.filter((book) => {
-    //         return book.shelf === 'wantToRead';
-    //       })
-    //       this.setState(() => ({
-    //         wantToRead
-    //       }))
-    // }
+  
 
     render() {
         const books = this.props.books.filter(

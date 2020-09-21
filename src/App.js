@@ -22,14 +22,13 @@ class BooksApp extends React.Component {
     shelf: ["Move to...", "Currently Reading", "Want to Read", "Read", "None"],
   }
 
-  componentDidMount() {
-    console.log("Got all books");
-    Books.getAll()
-    .then((books) => {
-      this.setState(() => ({
-        books
-      }))
-    })
+  async componentDidMount() {
+    const result  =  await Books.getAll()
+    this.handleBooks(result);
+  }
+
+  handleBooks = (books) => {
+    this.setState(() => ({books}));
   }
 
   changeShelf = (id, e) => {
@@ -91,6 +90,7 @@ class BooksApp extends React.Component {
               <SearchBooks 
               onSearch={this.handleSearch} 
               booksList={this.state.allBooks}
+              existingBooks={this.state.books}
               query={this.state.query} 
               onShelfChange={this.changeShelf}/>
             )}/>
